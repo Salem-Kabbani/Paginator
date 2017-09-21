@@ -3,6 +3,7 @@ package com.salemkb.paginator;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -56,6 +57,15 @@ public abstract class Paginator {
 
     protected abstract JSONArray getArray(String response) throws JSONException;
 
+    protected View getRefreshView() {
+        return null;
+    }
+
+    private void enableRefreshView(boolean enable) {
+        if(getRefreshView() != null)
+            getRefreshView().setEnabled(enable);
+    }
+
     private String initParams(@Nullable Map<String, ?> params) {
         if (params == null)
             return "";
@@ -76,12 +86,18 @@ public abstract class Paginator {
     public void enablePagenate() {
         if (paginate != null)
             paginate.unbind();
+        noMore = false;
+        isLoading = false;
         paginate = builder.build();
     }
 
     public void disablePagenate() {
         if (paginate != null)
             paginate.unbind();
+    }
+
+    public boolean isLoading() {
+        return isLoading;
     }
 
     private Paginate.Callbacks callbacks = new Paginate.Callbacks() {
